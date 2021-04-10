@@ -5,10 +5,15 @@ import java.io.Serializable;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -54,6 +59,42 @@ public class CarritosControllerImpl implements CarritosController, Serializable 
 		}
 
 		return respuesta;
+	}
+
+	@Override
+	@GetMapping("/consultarProductosCarrito/{pagina}/{tamano}")
+	public ResponseEntity<String> consultarProductosCarrito(@PathVariable(name = "pagina") int pagina, @PathVariable(name = "tamano") int tamano) {
+		ResponseEntity<String> respuesta = null;
+		Pageable pageable = PageRequest.of(pagina, tamano);
+		try {
+			respuesta = carritosService.consultarProductosCarrito(pageable);
+		} catch (Exception e) {
+			logger.error("Error interno en buscarRangoPrecio");
+			respuesta = ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+					.body("Error Interno de buscarRangoPrecio");
+		}
+
+		return respuesta;
+	}
+
+	@Override
+	@DeleteMapping("/deleteCarrito")
+	public void deleteCarrito() {
+		try {
+			carritosService.deleteCarrito();
+		} catch (Exception e) {
+			logger.error("Error interno en deleteCarrito");
+		}
+	}
+
+	@Override
+	@PutMapping("/aplicarCompra")
+	public void aplicarCompra() {
+		try {
+			carritosService.aplicarCompra();
+		} catch (Exception e) {
+			logger.error("Error interno en aplicarCompra");
+		}
 	}
 
 }

@@ -1,8 +1,11 @@
 package com.worldoffice.worldoffice.service.impl;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -41,6 +44,31 @@ public class CarritosServiceImpl extends Util implements CarritosService {
 		}
 
 		return respuesta;
+	}
+
+	@Override
+	public ResponseEntity<String> consultarProductosCarrito(Pageable pageable) throws Exception {
+		Page<CarritoCompras> listCarritoCompras = iCarritos.consultarProductosCarrito(pageable);
+		return ResponseEntity
+				.ok((listCarritoCompras != null && !listCarritoCompras.isEmpty()) ? this.convertToJson(listCarritoCompras.getContent())
+						: "No hay registros en carritos");
+	}
+
+	@Override
+	public void deleteCarrito() throws Exception {
+		iCarritos.deleteAll();
+	}
+
+	@Override
+	public void aplicarCompra() throws Exception {	
+		List<CarritoCompras> lisTemp = (List<CarritoCompras>) iCarritos.findAll();
+		
+		for(CarritoCompras carritoCompras : lisTemp) {
+			carritoCompras.getIdproducto().setStock(carritoCompras.getIdproducto().getStock() - carritoCompras.getCantidad());
+			carritoCompras.setEstado("VENDIDO");
+			
+			iCarritos.save(carritoCompras);
+		}
 	}
 
 }

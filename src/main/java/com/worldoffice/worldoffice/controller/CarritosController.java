@@ -12,5 +12,11 @@ import com.worldoffice.worldoffice.entity.CarritoCompras;
 public interface CarritosController {
 
 	ResponseEntity<String> agregarProducto(@RequestBody CarritoCompras entity);
+	
+	ResponseEntity<String> consultarProductosCarrito(int pagina, int tamano);
+	
+	void deleteCarrito();
+	
+	void aplicarCompra();
 
 }

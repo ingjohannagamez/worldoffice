@@ -4,34 +4,23 @@ import java.text.SimpleDateFormat;
 import java.util.List;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.worldoffice.worldoffice.entity.CarritoCompras;
-import com.worldoffice.worldoffice.entity.Productos;
 
 public class Util {
 	
-	public String convertToJson(List<Productos> productos) throws Exception {
+	public String convertToJson(List<?> lisTemp) throws Exception {
 		ObjectMapper map = null;
 		String jsonInString;
 		map = new ObjectMapper();
-		jsonInString = map.writerWithDefaultPrettyPrinter().writeValueAsString(productos);
+		jsonInString = map.writerWithDefaultPrettyPrinter().writeValueAsString(lisTemp);
 
 		return jsonInString;
 	}
 	
-	public String convertToJson(Productos productos) throws Exception {
+	public <T> String convertToJson(T objTemp) throws Exception {
 		ObjectMapper map = null;
 		String jsonInString;
 		map = new ObjectMapper();
-		jsonInString = map.writerWithDefaultPrettyPrinter().writeValueAsString(productos);
-
-		return jsonInString;
-	}
-	
-	public String convertToJson(CarritoCompras carritoCompras) throws Exception {
-		ObjectMapper map = null;
-		String jsonInString;
-		map = new ObjectMapper();
-		jsonInString = map.writerWithDefaultPrettyPrinter().writeValueAsString(carritoCompras);
+		jsonInString = map.writerWithDefaultPrettyPrinter().writeValueAsString(objTemp);
 
 		return jsonInString;
 	}
